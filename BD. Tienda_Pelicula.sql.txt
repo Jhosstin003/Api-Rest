@@ -1,0 +1,53 @@
+-- Creación de la base de datos
+CREATE DATABASE tienda_peliculas;
+
+-- Uso de la base de datos
+USE tienda_peliculas;
+
+-- Tabla de Películas
+CREATE TABLE peliculas (
+    pelicula_id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    descripcion TEXT,
+    anio_lanzamiento YEAR,
+    categoria VARCHAR(255)
+);
+
+-- Tabla de Alquileres
+CREATE TABLE alquileres (
+    alquiler_id INT AUTO_INCREMENT PRIMARY KEY,
+    pelicula_id INT,
+    cliente_nombre VARCHAR(255),
+    cliente_apellido VARCHAR(255),
+    fecha_alquiler DATE,
+    fecha_devolucion DATE,
+    FOREIGN KEY (pelicula_id) REFERENCES peliculas(pelicula_id)
+);
+
+-- Insertando datos en la tabla peliculas
+INSERT INTO peliculas (titulo, descripcion, anio_lanzamiento, categoria) 
+VALUES 
+('Matrix', 'La trama sigue a Thomas Anderson, un programador informático que lleva una doble vida como el hacker "Neo"', 1999, 'Ciencia ficcion'),
+('John Wick', ' La historia sigue a John Wick, un ex-asesino a sueldo retirado que está de luto por la reciente muerte de su esposa.r Iosef Tarasov', 2014, 'Accion'),
+('John Constantine', 'la película sigue a John Constantine, un exorcista y detective de lo paranormal con la habilidad de ver y comunicarse con ángeles', 2005, 'Terror');
+
+-- Insertando datos en la tabla alquileres
+INSERT INTO alquileres (pelicula_id, cliente_nombre, cliente_apellido, fecha_alquiler, fecha_devolucion) 
+VALUES 
+(1, 'Victor', 'Moreira', '2019-12-07', '2020-01-07'),
+(2, 'Jhosstin', 'Ruiz', '2022-04-20', '2022-05-20'),
+(3, 'Keanu', 'Reeves', '2023-08-15', '2023-09-15');
+
+SELECT p.titulo, p.descripcion, p.anio_lanzamiento, p.categoria, a.fecha_alquiler, a.fecha_devolucion
+FROM alquileres a
+JOIN peliculas p ON a.pelicula_id = p.pelicula_id
+WHERE a.cliente_nombre = 'Keanu' AND a.cliente_apellido = 'Reeves';
+
+SELECT p.titulo, COUNT(a.alquiler_id) AS numero_de_alquileres
+FROM peliculas p
+LEFT JOIN alquileres a ON p.pelicula_id = a.pelicula_id
+GROUP BY p.titulo;
+
+SELECT titulo, descripcion, categoria
+FROM peliculas
+WHERE anio_lanzamiento = 2014;
